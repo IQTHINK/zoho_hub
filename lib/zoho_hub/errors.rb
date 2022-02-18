@@ -10,6 +10,9 @@ module ZohoHub
   class InvalidTokenError < StandardError
   end
 
+  class InvalidQuery < StandardError
+  end
+
   class InternalError < StandardError
   end
 

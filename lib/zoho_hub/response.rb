@@ -14,6 +14,10 @@ module ZohoHub
       error_code?('INVALID_TOKEN')
     end
 
+    def invalid_query?
+      error_code?('INVALID_QUERY')
+    end
+
     def internal_error?
       error_code?('INTERNAL_ERROR')
     end
