@@ -30,4 +30,7 @@ module ZohoHub
 
   class ZohoAPIError < StandardError
   end
+
+  class SyntaxError < StandardError
+  end
 end

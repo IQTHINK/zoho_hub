@@ -12,6 +12,9 @@ module ZohoHub
     include WithAttributes
     include WithValidations
 
+    # CRM Object Query Language path
+    COQL_REQUEST_PATH = "coql"
+
     # Default number of records when fetching all.
     DEFAULT_RECORDS_PER_PAGE = 200
 
@@ -150,6 +153,15 @@ module ZohoHub
 
       alias exist? exists?
 
+      def query(select_query)
+        body = post(COQL_REQUEST_PATH, select_query: select_query)
+        response = build_response(body)
+
+        data = response.nil? ? [] : response.data
+
+        data.map { |json| new(json) }
+      end
+
       def build_response(body)
         response = Response.new(body)
 
@@ -161,6 +173,7 @@ module ZohoHub
         raise NoPermission, response.msg if response.no_permission?
         raise MandatoryNotFound, response.msg if response.mandatory_not_found?
         raise RecordInBlueprint, response.msg if response.record_in_blueprint?
+        raise SyntaxError, response.msg if response.syntax_error?
 
         response
       end

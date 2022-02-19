@@ -42,6 +42,10 @@ module ZohoHub
       error_code?('RECORD_IN_BLUEPRINT')
     end
 
+    def syntax_error?
+      error_code?('SYNTAX_ERROR')
+    end
+
     def empty?
       @params.empty?
     end
@@ -62,6 +66,9 @@ module ZohoHub
 
         msg << ", expected #{expected} for '#{field}'"
         msg << " in #{parent_api_name}" if parent_api_name
+      elsif first_data.dig(:details, :clause)
+        clause = first_data.dig(:details, :clause)
+        msg << ": #{clause.upcase}"
       end
 
       msg
