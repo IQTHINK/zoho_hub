@@ -55,19 +55,30 @@ module ZohoHub
       data || @params
     end
 
-    def msg
-      first_data = data.is_a?(Array) ? data.first : data
-      msg = first_data[:message]
+    def parsed_data
+      data.is_a?(Array) ? data.first : data
+    end
 
-      if first_data.dig(:details, :expected_data_type)
-        expected = first_data.dig(:details, :expected_data_type)
-        field = first_data.dig(:details, :api_name)
-        parent_api_name = first_data.dig(:details, :parent_api_name)
+    def status
+      parsed_data[:status]
+    end
+
+    def code
+      parsed_data[:code]
+    end
+
+    def msg
+      msg = parsed_data[:message]
+
+      if parsed_data.dig(:details, :expected_data_type)
+        expected = parsed_data.dig(:details, :expected_data_type)
+        field = parsed_data.dig(:details, :api_name)
+        parent_api_name = parsed_data.dig(:details, :parent_api_name)
 
         msg << ", expected #{expected} for '#{field}'"
         msg << " in #{parent_api_name}" if parent_api_name
-      elsif first_data.dig(:details, :clause)
-        clause = first_data.dig(:details, :clause)
+      elsif parsed_data.dig(:details, :clause)
+        clause = parsed_data.dig(:details, :clause)
         msg << ": #{clause.upcase}"
       end
 
