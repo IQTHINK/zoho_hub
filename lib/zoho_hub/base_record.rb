@@ -89,6 +89,14 @@ module ZohoHub
         new(id: id).blueprint_transitions
       end
 
+      def fields
+        path = File.join('settings', 'fields')
+        params = { module: request_path }
+        body = get(path, params)
+
+        body.dig(:fields) || body
+      end
+
       def add_note(id:, title: '', content: '')
         path = File.join(request_path, id, 'Notes')
         post(path, data: [{ Note_Title: title, Note_Content: content }])

@@ -1,6 +1,7 @@
 /.bundle/
 /.env
 /.yardoc
+\.tool-versions
 /_yardoc/
 /coverage/
 /doc/

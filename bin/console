@@ -15,11 +15,9 @@ ZohoHub.configure do |config|
   config.debug        = ENV['ZOHO_DEBUG'] || false
 end
 
-# We assume that we already have a refresh token, to make things easier here.
-puts 'Refreshing token...'
-token_params = ZohoHub::Auth.refresh_token(ENV['ZOHO_REFRESH_TOKEN'])
-ZohoHub.setup_connection(token_params)
+puts 'Setting up connection...'
 
+ZohoHub.setup_connection(access_token: ENV['ZOHO_ACCESS_TOKEN'])
 send(:include, ZohoHub)
 
 require 'pry'
