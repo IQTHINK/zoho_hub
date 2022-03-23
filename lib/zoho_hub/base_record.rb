@@ -165,13 +165,27 @@ module ZohoHub
 
       alias exist? exists?
 
-      def query(select_query)
+      def query(select_query, all_pages: false)
+        @unpaginated_query ||= select_query
+        @paginated_data ||= []
+        @offset ||= 0
+
         body = post(COQL_REQUEST_PATH, select_query: select_query)
         response = build_response(body)
 
+        info = response.info
         data = response.nil? ? [] : response.data
 
-        data.map { |json| new(json) }
+        return data.map { |json| new(json) } unless all_pages
+
+        @paginated_data += data.map { |json| new(json) }
+
+        unless info[:more_records].nil?
+          @offset += 200
+          @paginated_data + query(@unpaginated_query + " LIMIT 200 OFFSET #{@offset}", all_pages: true)
+        end
+
+        @paginated_data
       end
 
       def build_response(body)

@@ -55,6 +55,11 @@ module ZohoHub
       data || @params
     end
 
+    def info
+      info = @params[:info] if @params[:info]
+      info || @params
+    end
+
     def parsed_data
       data.is_a?(Array) ? data.first : data
     end
