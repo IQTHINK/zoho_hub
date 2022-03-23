@@ -5,15 +5,13 @@ require 'zoho_hub/with_connection'
 require 'zoho_hub/with_attributes'
 require 'zoho_hub/with_validations'
 require 'zoho_hub/string_utils'
+require 'zoho_hub/coql'
 
 module ZohoHub
   class BaseRecord
     include WithConnection
     include WithAttributes
     include WithValidations
-
-    # CRM Object Query Language path
-    COQL_REQUEST_PATH = "coql"
 
     # Default number of records when fetching all.
     DEFAULT_RECORDS_PER_PAGE = 200
@@ -157,6 +155,10 @@ module ZohoHub
         data.map { |json| new(json) }
       end
 
+      def query(select_query, all_pages: false)
+        Coql.new(self, select_query, all_pages).call
+      end
+
       def exists?(id)
         !find(id).nil?
       rescue RecordNotFound
@@ -164,29 +166,6 @@ module ZohoHub
       end
 
       alias exist? exists?
-
-      def query(select_query, all_pages: false)
-        @unpaginated_query ||= select_query
-        @paginated_data ||= []
-        @offset ||= 0
-
-        body = post(COQL_REQUEST_PATH, select_query: select_query)
-        response = build_response(body)
-
-        info = response.info
-        data = response.nil? ? [] : response.data
-
-        return data.map { |json| new(json) } unless all_pages
-
-        @paginated_data += data.map { |json| new(json) }
-
-        unless info[:more_records].nil?
-          @offset += 200
-          @paginated_data + query(@unpaginated_query + " LIMIT 200 OFFSET #{@offset}", all_pages: true)
-        end
-
-        @paginated_data
-      end
 
       def build_response(body)
         response = Response.new(body)
