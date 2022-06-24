@@ -10,7 +10,7 @@ module ZohoHub
 
     REQUEST_PATH = 'users'
 
-    attributes :country, :Current_Shift, :microsoft, :state, :fax, :zip,
+    attributes :country, :current_shift, :microsoft, :state, :fax, :zip,
                :profile, :full_name, :phone, :status, :role, :city, :street, :id,
                :first_name, :email, :mobile, :last_name, :category
 
