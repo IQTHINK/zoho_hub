@@ -11,6 +11,7 @@ require 'zoho_hub/errors'
 require 'zoho_hub/base_record'
 require 'zoho_hub/modules/attachment'
 require 'zoho_hub/settings/module'
+require 'zoho_hub/user'
 
 require 'zoho_hub/reflection/module_builder'
 
