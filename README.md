@@ -49,7 +49,7 @@ ActiveRecord, to do CRUD operations.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'zoho_hub'
+gem 'zoho_hub', github: 'IQTHINK/zoho_hub', branch: 'main'
 ```
 
 And then execute:
