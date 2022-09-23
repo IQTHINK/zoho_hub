@@ -95,6 +95,14 @@ module ZohoHub
         body.dig(:fields) || body
       end
 
+      def layout(id)
+        path = File.join('settings', 'layouts', id)
+        params = { module: request_path }
+        body = get(path, params)
+
+        body.dig(:layouts).first || body
+      end
+
       def get_notes(id)
         new(id: id).get_notes
       end
