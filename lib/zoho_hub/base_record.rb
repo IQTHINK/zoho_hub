@@ -45,17 +45,12 @@ module ZohoHub
 
         if params.size == 1
           params = case params.keys.first
-                   when :criteria, :email, :phone, :word
-                     # these attributes are directly handled by Zoho
-                     # see https://www.zoho.com/crm/help/developer/api/search-records.html
-                     params
-                   else
-                     key = attr_to_zoho_key(params.keys.first)
-
-                     {
-                       criteria: "#{key}:equals:#{params.values.first}"
-                     }
-                   end
+            when :criteria, :email, :phone, :word
+              params
+            else
+              key = attr_to_zoho_key(params.keys.first)
+              { criteria: "#{key}:equals:#{params.values.first}" }
+            end
         end
 
         body = get(path, params)
@@ -64,6 +59,24 @@ module ZohoHub
         data = response.nil? ? [] : response.data
 
         data.map { |json| new(json) }
+      end
+
+      def count_where(params)
+        path = File.join(request_path, 'actions', 'count')
+
+        if params.size == 1
+          params = case params.keys.first
+            when :criteria, :email, :phone, :word
+              params
+            else
+              key = attr_to_zoho_key(params.keys.first)
+              { criteria: "#{key}:equals:#{params.values.first}" }
+            end
+        end
+
+        body = get(path, params)
+        response = build_response(body)
+        data = response.nil? ? 0 : response.data.dig(:count)
       end
 
       def find_by(params)
