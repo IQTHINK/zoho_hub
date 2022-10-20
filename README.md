@@ -499,6 +499,8 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 the tests. You can also run `bin/console` for an interactive prompt that will allow you to
 experiment.
 
+Create a file in the root of the project called .env, the contents of this file can be found in 1Password as "Zoho Hub ENVS".
+
 To install this gem onto your local machine, run `bundle exec rake install`.
 
 ## Contributing
