@@ -29,7 +29,7 @@ module ZohoHub
         attachment
       end
 
-      def file_attachment(id:, attachment_id:)
+      def field_attachment(id:, attachment_id:)
         params = {fields_attachment_id: attachment_id}
         path = File.join(request_path, id.to_s, "actions", "download_fields_attachment")
 
