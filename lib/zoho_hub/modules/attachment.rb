@@ -17,7 +17,7 @@ module ZohoHub
       def download_attachment(parent_id:, attachment_id:)
         attachment = related_attachments(parent_id: parent_id).find { |a| a.id == attachment_id }
         uri = File.join(request_path, parent_id, 'Attachments', attachment_id)
-        res = ZohoHub.connection.adapter.get(uri)
+        res = ZohoHub.connection.base_adapter.get(uri)
         attachment.content_type = res.headers['content-type']
         extension = File.extname(attachment.file_name)
         basename = File.basename(attachment.file_name, extension)
@@ -27,6 +27,18 @@ module ZohoHub
         file.rewind
         attachment.file = file
         attachment
+      end
+
+      def file_attachment(id:, attachment_id:)
+        params = {fields_attachment_id: attachment_id}
+        path = File.join(request_path, id.to_s, "actions", "download_fields_attachment")
+
+        response = ZohoHub.connection.base_adapter.get(path, params)
+        filename = response.headers.fetch("content-disposition", "attachment.pdf").split("'").last
+
+        file = Tempfile.new([filename, File.extname(filename)], binmode: true)
+        file.write(response.body)
+        file
       end
     end
   end

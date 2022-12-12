@@ -38,6 +38,13 @@ module ZohoHub
       @refresh_token ||= refresh_token # do not overwrite if it's already set
     end
 
+    def base_adapter
+      @public_adapter ||= Faraday.new(url: base_url) do |conn|
+        conn.headers = authorization_header if access_token?
+        conn.adapter Faraday.default_adapter
+      end
+    end
+
     def get(path, params = {})
       log "GET #{path} with #{params}"
 
